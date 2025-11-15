@@ -1,0 +1,95 @@
+<!--
+  Argument Node Template
+  ------------------------------------------------------------
+  This template defines how a single argument node and its
+  hierarchy (children and rebuttals) are rendered recursively.
+
+  Core features:
+    • Displays the main argument text with stance-based coloring.
+    • Supports selection highlighting and challenge indicators.
+    • Recursively renders both child arguments and rebuttals.
+    • Emits click events to notify parent components.
+-->
+
+<!-- Argument display with click support -->
+<div
+  class="ps-3 mt-1"
+  (click)="handleClick()"
+  [class.selected]="argument.id === selectedStatementId"
+  style="cursor: pointer"
+>
+  <!-- Argument text color is determined by stance -->
+  <span
+    [ngClass]="{
+      'text-primary': argument.stance === 'proponent',
+      'text-danger': argument.stance === 'opponent'
+    }"
+  >
+    ← {{ argument.text }}
+  </span>
+
+  <!-- Challenge indicator icon displayed if this node is currently challenged -->
+  <span *ngIf="argument.id === currentlyChallengedId" class="text-danger ms-2">
+    🚨
+  </span>
+</div>
+
+<!-- Recursive rendering: Justifications (non-rebuttal children) -->
+<div class="ps-4">
+  <app-argument-node
+    *ngFor="let child of getChildren()"
+    [argument]="child"
+    [allArguments]="allArguments"
+    [selectedStatementId]="selectedStatementId"
+    [currentlyChallengedId]="currentlyChallengedId"
+    (nodeClicked)="nodeClicked.emit($event)"
+  ></app-argument-node>
+</div>
+
+<!-- Rebuttals section: Each rebuttal is clickable and may have its own substructure -->
+<div
+  *ngFor="let rebut of getRebuttals()"
+  class="ps-5 my-1 rebuttal-entry"
+  (click)="nodeClicked.emit(rebut)"
+  style="cursor: pointer"
+  [class.selected]="rebut.id === selectedStatementId"
+>
+  <!-- Rebuttal text with stance-based color -->
+  <span
+    [ngClass]="{
+      'text-primary': rebut.stance === 'proponent',
+      'text-danger': rebut.stance === 'opponent'
+    }"
+  >
+    ⚡ {{ rebut.text }}
+  </span>
+
+  <!-- Challenge indicator for rebuttals -->
+  <span *ngIf="rebut.id === currentlyChallengedId" class="ms-2 text-warning">
+    🚨
+  </span>
+
+  <!-- Recursive rendering of rebuttals under this rebuttal -->
+  <div class="ps-4">
+    <app-argument-node
+      *ngFor="let subRebut of getRebuttalsOf(rebut)"
+      [argument]="subRebut"
+      [allArguments]="allArguments"
+      [selectedStatementId]="selectedStatementId"
+      [currentlyChallengedId]="currentlyChallengedId"
+      (nodeClicked)="nodeClicked.emit($event)"
+    ></app-argument-node>
+  </div>
+
+  <!-- Recursive rendering of non-rebuttal children under this rebuttal -->
+  <div class="ps-4">
+    <app-argument-node
+      *ngFor="let child of getChildrenOf(rebut)"
+      [argument]="child"
+      [allArguments]="allArguments"
+      [selectedStatementId]="selectedStatementId"
+      [currentlyChallengedId]="currentlyChallengedId"
+      (nodeClicked)="nodeClicked.emit($event)"
+    ></app-argument-node>
+  </div>
+</div>

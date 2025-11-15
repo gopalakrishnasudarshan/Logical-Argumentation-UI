@@ -1,0 +1,30 @@
+.tracker-box {
+  width: 400px;
+  min-height: 280px;
+  padding: 20px;
+  font-size: 0.95rem;
+  background-color: #1e1e1e; /* Dark background */
+  border: 1px solid #333;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  color: #f0f0f0;
+}
+
+.tracker-box h5 {
+  color: #90caf9; /* Light blue for title */
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.tracker-box .text-danger {
+  color: #ff6b6b; /* Bright red for timer */
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.move-entry {
+  color: #f0f0f0; /* or a soft gray like #dddddd */
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+}
+

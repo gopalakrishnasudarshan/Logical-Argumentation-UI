@@ -1,0 +1,50 @@
+.argument-info-box {
+  background-color: #1e1e1e; /* Dark gray background */
+  width: 100%;
+  max-width: 100%;
+  min-height: 280px;
+  padding: 20px;
+  border: 1px solid #333; /* Subtle border for structure */
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* Deeper dark shadow */
+  color: #f0f0f0; /* Light text color */
+}
+
+.section-header {
+  color: #90caf9;
+}
+
+/* Optional: If you use headers, icons, or links inside */
+.argument-info-box h5,
+.argument-info-box h6 {
+  color: #90caf9; /* Soft blue for section titles */
+}
+
+.argument-info-box a {
+  color: #64b5f6;
+  text-decoration: underline;
+}
+
+.argument-info-box .btn,
+.argument-info-box button {
+  background-color: #2a2a2a;
+  color: #f5f5f5;
+  border: 1px solid #444;
+}
+
+.argument-info-box .btn:hover {
+  background-color: #3a3a3a;
+}
+
+.dark-feedback-button {
+  background-color: #2a2a2a;
+  color: #f5f5f5;
+  border: 1px solid #444;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+
+.dark-feedback-button:hover {
+  background-color: #3a3a3a;
+}

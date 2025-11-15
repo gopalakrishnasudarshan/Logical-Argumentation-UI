@@ -1,0 +1,32 @@
+<!--
+  Argument Info Box Template
+  ------------------------------------------------------------
+  This template displays detailed information about a selected argument.
+  It shows:
+    - The argument's source (e.g., reference or citation)
+    - The critical question related to the argument
+    - A button for the user to provide feedback
+
+  The component relies on input bindings:
+    - source: passed from the parent component
+    - criticalQuestion: passed from the parent component
+-->
+
+<div class="argument-info-box">
+  <!-- Section title -->
+  <h5 class="mb-3 section-header">🧠 Argument Info</h5>
+
+  <!-- Display the argument source; fallback text shown if not provided -->
+  <p><strong>📚 Source:</strong> {{ source || "Not provided" }}</p>
+
+  <!-- Display the critical question; fallback text shown if not available -->
+  <p>
+    <strong>❓ Critical Question:</strong>
+    {{ criticalQuestion || "Not available" }}
+  </p>
+
+  <!-- Feedback button placeholder; triggers feedback interaction -->
+  <div class="mt-3 text-center">
+    <button class="dark-feedback-button">💬 Give Feedback</button>
+  </div>
+</div>

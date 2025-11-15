@@ -1,0 +1,132 @@
+{
+  "Television": {
+    "pro": [
+      {
+        "id": 1,
+        "text": "Provides access to news, education, and entertainment for all."
+      },
+      {
+        "id": 2,
+        "text": "Can promote shared experiences and cultural connection."
+      }
+    ],
+    "con": [
+      {
+        "id": 3,
+        "text": "Encourages sedentary lifestyle and reduces productivity."
+      },
+      {
+        "id": 4,
+        "text": "Promotes passive consumption and short attention spans."
+      }
+    ]
+  },
+  "Social Media": {
+    "pro": [
+      {
+        "id": 5,
+        "text": "Connects people globally and gives a platform to marginalized voices."
+      },
+      { "id": 6, "text": "Facilitates real-time news, learning, and activism." }
+    ],
+    "con": [
+      { "id": 7, "text": "Can spread misinformation and cause addiction." },
+      { "id": 8, "text": "Negatively affects mental health and privacy." }
+    ]
+  },
+  "Online Education": {
+    "pro": [
+      {
+        "id": 9,
+        "text": "Enables flexible, affordable, and self-paced learning."
+      },
+      {
+        "id": 10,
+        "text": "Removes geographical barriers to quality education."
+      }
+    ],
+    "con": [
+      {
+        "id": 11,
+        "text": "Reduces human interaction and practical learning opportunities."
+      },
+      {
+        "id": 12,
+        "text": "Requires strong self-discipline and stable internet access."
+      }
+    ]
+  },
+  "Artificial Intelligence": {
+    "pro": [
+      {
+        "id": 13,
+        "text": "Automates tasks and boosts productivity across industries."
+      },
+      {
+        "id": 14,
+        "text": "Drives innovation in medicine, climate modeling, and research."
+      }
+    ],
+    "con": [
+      {
+        "id": 15,
+        "text": "May lead to job loss, bias, and unethical applications."
+      },
+      { "id": 16, "text": "Consumes high energy and can harm the environment." }
+    ]
+  },
+  "Climate Change": {
+    "pro": [
+      {
+        "id": 17,
+        "text": "Strong scientific evidence supports human-driven climate change."
+      },
+      {
+        "id": 18,
+        "text": "Mitigation can lead to cleaner energy and healthier ecosystems."
+      }
+    ],
+    "con": [
+      {
+        "id": 19,
+        "text": "Some argue climate models exaggerate future risks."
+      },
+      { "id": 20, "text": "Transition costs may burden developing economies." }
+    ]
+  },
+  "Video Games": {
+    "pro": [
+      { "id": 21, "text": "Enhances problem-solving and coordination skills." },
+      { "id": 22, "text": "Provides entertainment and stress relief." }
+    ],
+    "con": [
+      {
+        "id": 23,
+        "text": "Excessive gaming can cause addiction and poor health."
+      },
+      {
+        "id": 24,
+        "text": "Exposure to violent content may desensitize players."
+      }
+    ]
+  },
+  "Fast Food": {
+    "pro": [
+      {
+        "id": 25,
+        "text": "Quick, affordable, and convenient for busy lifestyles."
+      },
+      { "id": 26, "text": "Predictable taste and portion control." }
+    ],
+    "con": [
+      {
+        "id": 27,
+        "text": "Often unhealthy and linked to obesity and heart disease."
+      },
+      {
+        "id": 28,
+        "text": "Promotes poor dietary habits and environmental waste."
+      }
+    ]
+  }
+}

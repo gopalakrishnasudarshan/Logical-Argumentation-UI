@@ -1,0 +1,129 @@
+<!--
+  Multi-Select Dropdown Template
+  ------------------------------------------------------------
+  Provides a fully interactive dropdown allowing users to:
+    • Select multiple predefined options.
+    • Filter options via search input.
+    • Add a custom "Other" entry if enabled.
+    • View selected options as removable chips.
+
+  This template works with its TypeScript logic to manage selections,
+  filter lists, and emit updates to the parent component.
+-->
+
+<div class="multi-select-container">
+  <!-- Label for the dropdown -->
+  <label class="label">{{ label }}</label>
+
+  <!-- Display selected options as chips -->
+  <div class="selected-items" *ngIf="selectedOptions.length > 0">
+    <div
+      class="chip"
+      *ngFor="let item of selectedOptions; trackBy: trackBySelectedOption"
+    >
+      <span>{{ item.text }}</span>
+      <!-- Remove individual selection -->
+      <button class="chip-remove" (click)="removeSelection(item)" type="button">
+        ×
+      </button>
+    </div>
+  </div>
+
+  <!-- Dropdown trigger area (opens/closes dropdown panel) -->
+  <div class="dropdown-trigger" (click)="toggleDropdown()">
+    <div class="trigger-content">
+      <!-- Placeholder shown when nothing is selected -->
+      <span *ngIf="selectedOptions.length === 0" class="placeholder">
+        {{ placeholder }}
+      </span>
+      <!-- Display number of selected options -->
+      <span *ngIf="selectedOptions.length > 0" class="selection-count">
+        {{ selectedOptions.length }} item(s) selected
+      </span>
+    </div>
+
+    <!-- Dropdown arrow with rotation based on open state -->
+    <div class="dropdown-arrow" [class.open]="isOpen">
+      <svg width="12" height="8" viewBox="0 0 12 8">
+        <path
+          d="M1 1l5 5 5-5"
+          stroke="currentColor"
+          stroke-width="2"
+          fill="none"
+        />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Dropdown panel containing options and search input -->
+  <div class="dropdown-content" [class.open]="isOpen">
+    <!-- Search field for filtering available options -->
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search options..."
+        [(ngModel)]="searchTerm"
+        (input)="filterOptions()"
+      />
+    </div>
+
+    <!-- Scrollable list of filtered options -->
+    <div class="options-list">
+      <!-- Individual selectable option -->
+      <div
+        class="option-item"
+        *ngFor="let option of filteredOptions; trackBy: trackByFn"
+        (click)="toggleOption(option)"
+      >
+        <label class="option-label">
+          <input
+            type="checkbox"
+            [checked]="isSelected(option)"
+            (change)="toggleOption(option)"
+          />
+          <span class="checkmark"></span>
+          <span class="option-text">{{ option.text }}</span>
+        </label>
+      </div>
+
+      <!-- "Other" option allowing custom input entry -->
+      <div class="option-item other-option" (click)="toggleOtherOption()">
+        <label class="option-label">
+          <input
+            type="checkbox"
+            [checked]="showOtherInput"
+            (change)="toggleOtherOption()"
+          />
+          <span class="checkmark"></span>
+          <span class="option-text">Other (specify)</span>
+        </label>
+      </div>
+
+      <!-- Custom input field shown when "Other" is active -->
+      <div
+        class="custom-input-container"
+        *ngIf="showOtherInput"
+        [@slideAnimation]
+      >
+        <input
+          type="text"
+          class="custom-input"
+          placeholder="Enter your own justification..."
+          [(ngModel)]="customValue"
+          (keyup.enter)="addCustomOption()"
+          (blur)="addCustomOption()"
+          #customInput
+        />
+        <!-- Add button for confirming custom entry -->
+        <button
+          class="add-custom-btn"
+          (click)="addCustomOption()"
+          [disabled]="!customValue?.trim()"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

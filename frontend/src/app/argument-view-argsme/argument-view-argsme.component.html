@@ -1,0 +1,50 @@
+<!-- 🎯 Two-Lane (args.me-style) Argument View Template -->
+<div class="argsme-shell">
+  <!-- 🧭 Header Section -->
+  <header class="argsme-header">
+    <div class="title">
+      <!-- Current debate topic name -->
+      <span class="topic-pill">{{ topic }}</span>
+
+      <!-- Static label showing this view mode -->
+      <span class="view-tag">Top Arguments</span>
+    </div>
+  </header>
+
+  <!-- 🧩 Main Content Area -->
+  <div class="argsme-main">
+    <section class="lanes overlay-anchor">
+      <!-- 🟢 Left Lane — Pro Arguments -->
+      <div class="lane lane-left">
+        <h3 class="lane-title">Pro</h3>
+
+        <!-- Container for top-N supporting arguments -->
+        <div class="lane-stack">
+          <div
+            class="node"
+            *ngFor="let item of topArgs?.pro"
+            [attr.data-arg-id]="item?.id"
+          >
+            {{ item?.text }}
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔴 Right Lane — Con Arguments -->
+      <div class="lane lane-right">
+        <h3 class="lane-title">Con</h3>
+
+        <!-- Container for top-N opposing arguments -->
+        <div class="lane-stack">
+          <div
+            class="node"
+            *ngFor="let item of topArgs?.con"
+            [attr.data-arg-id]="item?.id"
+          >
+            {{ item?.text }}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

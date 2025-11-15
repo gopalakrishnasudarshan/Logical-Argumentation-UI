@@ -1,0 +1,48 @@
+{
+  "100": [
+    {
+      "id": 101,
+      "text": "Educational programming improves general knowledge and awareness.",
+      "source": "PBS LearningMedia (overview)"
+    },
+    {
+      "id": 102,
+      "text": "Public broadcasters provide accessible news and civic information.",
+      "source": "Public broadcasting charters"
+    },
+    {
+      "id": 201,
+      "text": "Excessive TV consumption correlates with sedentary lifestyle and health risks.",
+      "source": "Observational health studies"
+    },
+    {
+      "id": 202,
+      "text": "Sensationalist content can distort public perception and reduce attention spans.",
+      "source": null
+    }
+  ],
+  "101": [
+    {
+      "id": 111,
+      "text": "Documentaries and science shows increase interest in STEM among students.",
+      "source": null
+    },
+    {
+      "id": 112,
+      "text": "Language-learning channels support early vocabulary development.",
+      "source": null
+    }
+  ],
+  "201": [
+    {
+      "id": 211,
+      "text": "Higher daily TV time is associated with lower physical activity in teens.",
+      "source": null
+    },
+    {
+      "id": 212,
+      "text": "Late-night TV use is linked with sleep disruption and reduced academic focus.",
+      "source": null
+    }
+  ]
+}

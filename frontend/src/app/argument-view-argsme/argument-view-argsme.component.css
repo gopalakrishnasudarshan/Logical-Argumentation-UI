@@ -1,0 +1,297 @@
+/* ────────────── Shell & Header ────────────── */
+
+.argsme-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: #f5f5f5; /* inherit global text color */
+  background: transparent;     /* keep global gradient visible */
+}
+
+.argsme-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;               /* matches your argument-view paddings */
+  border-bottom: 1px solid #2c2c2c;
+  background-color: transparent;
+}
+
+.argsme-header .title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.topic-pill {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid #2c2c2c;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.view-tag {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  border: 1px solid #2c2c2c;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+}
+
+/* ────────────── Main Layout (Sidebars + Two Lanes) ────────────── */
+
+.argsme-main {
+  display: grid;
+  grid-template-columns: 1fr 360px; /* left: lanes, right: sidebar */
+  gap: 1.5rem;
+  padding: 1rem;
+  min-height: calc(100vh - 56px); /* align with your classic sticky sidebars */
+}
+
+/* Sidebars reuse your dark styling */
+.sidebar {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.sidebar.left {
+  border-right: 2px solid #2c2c2c;
+  max-width: 320px;
+}
+
+.sidebar.right {
+  border-left: 2px solid #2c2c2c;
+  max-width: 360px;
+}
+
+/* Center two-lane area */
+.lanes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;              /* space between Pro and Con columns */
+  align-items: start;
+}
+
+/* NEW: anchor for absolute overlay so layout doesn't shift */
+.overlay-anchor {
+  position: relative;
+}
+
+/* Lane columns */
+.lane {
+  background-color: #252525;        /* matches .structured-argument-box tone */
+  border: 2px solid #444;
+  border-radius: 12px;
+  padding: 1rem;
+  min-height: 60vh;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.lane-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  color: #4da6ff; /* same accent used for .main-claim in classic */
+}
+
+/* Vertical stack for nodes inside each lane */
+.lane-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Nodes (cards) – visually aligned with .argument-card */
+.node {
+  position: relative;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  word-wrap: break-word;
+}
+
+
+
+
+/* Root claim highlight (keeps your classic look) */
+.node.root {
+  border-left: 4px solid #4da6ff;           /* pro accent */
+  background-color: #2e3b3a;                /* pro tint from .align-left */
+}
+
+/* Placeholder/empty states */
+.node.placeholder,
+.status {
+  background-color: #1f1f1f;
+  border: 1px dashed #444;
+  color: #9ecbff; /* matches .justification tone */
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Right lane “con” style helper */
+.lane-right .node {
+  text-align: right;
+  background-color: #3b2e2e;                /* opponent tint from .align-right */
+  border-right: 4px solid #ff4d4d;
+}
+
+/* Current/selected node outline parity */
+.node.current-argument {
+  outline: 3px solid #0d6efd;
+  box-shadow: 0 0 10px rgba(13, 110, 253, 0.6);
+  position: relative;
+  z-index: 1;
+}
+
+/* ────────────── Controls & Allowed Moves Rows ────────────── */
+
+.argsme-header .actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.controls-row,
+.allowed-moves-row {
+  grid-column: 1 / -1;          /* span both Pro and Con columns */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.controls-inner {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Optional: a touch of spacing to match classic rhythm */
+.allowed-moves-row {
+  margin-top: 0.75rem;
+}
+
+/* Header actions were removed; ensure no leftover spacing there */
+.argsme-header .actions { display: none; }
+
+/* ────────────── NEW: Non-layout-shifting overlay styles ────────────── */
+
+/* Host sits over the lanes without affecting layout */
+.overlay-host {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;                       /* adjust down if you want more breathing room */
+  width: min(720px, 92%);
+  z-index: 20;
+  pointer-events: none;         /* let clicks pass through unless on card */
+  display: flex;
+  justify-content: center;
+}
+
+/* Card accepts interactions */
+.overlay-card {
+  pointer-events: auto;
+  background: #111;
+  border: 1px solid #2c2c2c;
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+/* Align action buttons inside overlay */
+.picker-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+/* ────────────── Responsive ────────────── */
+
+@media (max-width: 991px) {
+  .argsme-main {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    position: relative;
+    box-shadow: none;
+    border: none;
+  }
+
+  .lanes {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Keep overlay centered in stacked layout */
+  .overlay-host {
+    position: sticky;       /* so it stays near top in mobile flow */
+    top: 0.5rem;
+    transform: none;
+    left: auto;
+    width: 100%;
+    padding: 0 0.5rem;
+  }
+
+  .lane-right .node {
+    text-align: left;       /* better readability when stacked */
+    border-right: none;
+    border-left: 4px solid #ff4d4d;
+  }
+}
+
+/* ────────────── (Legacy) Centered block from old approach ────────────── */
+/* Kept for safety; no harm if left in. The HTML no longer uses it. */
+
+
+/* Previously used grid-centered row; now replaced by overlay-host */
+.justification-row {
+  grid-column: 1 / -1;      /* span both main columns */
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.justify-inner {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.justify-control { width: 100%; }
+
+.justify-control app-multi-select-dropdown {
+  display: block;
+  width: 100%;
+}
+
+/* argsme-two-lane.component.css */
+.node.flash {
+  outline: 2px solid #ff4d4d;
+  outline-offset: 2px;
+  animation: fadeFlash 1.2s ease-out;
+}
+
+@keyframes fadeFlash {
+  0%   { outline-color: #ff4d4d; }
+  100% { outline-color: transparent; }
+}

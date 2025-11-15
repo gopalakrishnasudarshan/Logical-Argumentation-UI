@@ -1,0 +1,382 @@
+<div class="argument-view-container d-flex flex-row gap-4 px-3 pt-0">
+  <!-- 📘 Main Debate Area -->
+  <div class="main-panel flex-grow-1">
+    <!-- Topic title / context header -->
+    <h4 class="text-center text-white">🎙️ Now Debating: {{ topic }}</h4>
+
+    <!-- Structured Argument: root claim + first-level children -->
+    <div class="structured-argument-box mt-4">
+      <!-- Root claim: clickable unless already challenged -->
+      <div
+        class="main-claim"
+        [ngClass]="{
+          'text-muted': challengedArgumentIds.has(mainClaim?.id),
+          'text-primary': !challengedArgumentIds.has(mainClaim?.id)
+        }"
+        [style.cursor]="
+          challengedArgumentIds.has(mainClaim?.id) ? 'not-allowed' : 'pointer'
+        "
+        (click)="
+          !challengedArgumentIds.has(mainClaim?.id)
+            ? handleNodeClick(mainClaim)
+            : null
+        "
+      >
+        <!-- Root claim text (guarded for null) -->
+        <span *ngIf="mainClaim">{{ mainClaim.text }}</span>
+
+        <!-- Red alert icon when this claim is the one currently being challenged -->
+        <span
+          *ngIf="mainClaim?.id === currentlyChallengedId"
+          class="text-danger ms-2"
+          >🚨</span
+        >
+      </div>
+
+      <!-- 🔴 Existing rebuttals directly attached to the root claim -->
+      <div
+        class="ps-3 text-danger"
+        *ngFor="let rebut of getRebuttalsToRootClaim()"
+      >
+        {{ rebut.text }}
+      </div>
+
+      <!-- First-level justification nodes (non-rebuttal) under the root claim -->
+      <ng-container *ngFor="let arg of argumentPath">
+        <app-argument-node
+          *ngIf="arg.parentId === argumentPath[0].id && !arg.isRebuttal"
+          [argument]="arg"
+          [allArguments]="argumentPath"
+          [selectedStatementId]="selectedStatementId"
+          [currentlyChallengedId]="currentlyChallengedId"
+          (nodeClicked)="handleNodeClick($event)"
+        ></app-argument-node>
+      </ng-container>
+    </div>
+
+    <!-- Turn indicator and transient messages -->
+    <div class="text-center my-3">
+      <!-- Current turn badge (primary for proponent, danger for opponent) -->
+      <span
+        class="badge fs-5"
+        [ngClass]="{
+          'bg-primary': currentTurn === 'proponent',
+          'bg-danger': currentTurn === 'opponent'
+        }"
+      >
+        🎙️ {{ currentTurn | titlecase }}'s Turn
+      </span>
+
+      <!-- Status / error helper text -->
+      <p *ngIf="statusMessage" class="text-danger text-center mt-3">
+        {{ statusMessage }}
+      </p>
+
+      <!-- Optional instruction line shown during targeted interactions (e.g., challenge/rebuttal pick) -->
+      <p *ngIf="turnInstruction" class="text-primary text-center mt-3">
+        {{ turnInstruction }}
+      </p>
+
+      <!-- Justification selection UI (dropdown-based) -->
+      <div *ngIf="showJustificationOptions" class="text-center mt-4">
+        <p>Select one or more reasons:</p>
+
+        <!-- Multi-select reasons control -->
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
+          <app-multi-select-dropdown
+            label=""
+            placeholder="Select one or more reasons..."
+            [options]="reasonOptions"
+            (selectionChange)="onSelectionChange($event)"
+          ></app-multi-select-dropdown>
+        </div>
+
+        <!-- Submit / Skip actions for justification selection -->
+        <div class="text-center mt-4">
+          <button class="btn btn-primary" (click)="submitJustifications()">
+            Submit Selected
+          </button>
+          <button class="btn btn-secondary ms-2" (click)="skipJustification()">
+            Skip
+          </button>
+        </div>
+      </div>
+
+      <!-- Primary move controls (visible when not in justification selection and debate ongoing) -->
+      <div
+        *ngIf="!showJustificationOptions && !debateEnded"
+        class="text-center mt-4"
+      >
+        <h5>Choose your move:</h5>
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-2">
+          <!-- Challenge button, gated by allowedMoves -->
+          <button
+            class="btn btn-outline-primary"
+            (click)="startMoveSelection('challenge')"
+            [disabled]="!allowedMoves.includes('challenge')"
+          >
+            ❓ Challenge
+          </button>
+
+          <!-- Rebuttal button, gated by allowedMoves (uses 'rebut' key in rules) -->
+          <button
+            class="btn btn-outline-danger"
+            (click)="startMoveSelection('rebuttal')"
+            [disabled]="!allowedMoves.includes('rebut')"
+          >
+            🛡️ Rebuttal
+          </button>
+
+          <!-- Skip button, gated by allowedMoves -->
+          <button
+            class="btn btn-outline-secondary"
+            (click)="passTurn()"
+            [disabled]="!allowedMoves.includes('skip')"
+          >
+            ⏭️ Skip
+          </button>
+
+          <!-- Accept button, gated by allowedMoves; ends debate -->
+          <button
+            class="btn btn-outline-success"
+            (click)="handleMove('accept')"
+            [disabled]="!allowedMoves.includes('accept')"
+          >
+            ✅ Accept
+          </button>
+        </div>
+      </div>
+
+      <!-- Finalization banner once debate is accepted -->
+      <div *ngIf="debateEnded" class="text-center mt-4 alert alert-success">
+        ✅ The debate has concluded. The argument has been accepted.
+      </div>
+
+      <!-- Rebuttal flow: prompt user to pick a target justification -->
+      <div
+        *ngIf="isRebuttingJustification && !rebutTarget"
+        class="text-center mt-4"
+      >
+        <h5 class="text-warning">Click on a statement to rebut.</h5>
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-2">
+          <!-- Buttons mirror items in argumentPath (simple picker alternative to clicking nodes) -->
+          <button
+            class="btn btn-outline-danger"
+            *ngFor="let justification of argumentPath"
+            (click)="selectJustificationToRebut(justification)"
+          >
+            {{ justification.text }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Rebuttal entry UI: textarea + submit + existing rebuttals list -->
+      <div *ngIf="rebutTarget" class="text-center mt-4">
+        <h5 class="text-danger">
+          ⚡ Enter your rebuttal to "{{ rebutTarget.text }}"
+        </h5>
+
+        <!-- 📝 Textarea for composing a new rebuttal -->
+        <textarea
+          [(ngModel)]="rebuttalText"
+          rows="3"
+          placeholder="Type your rebuttal..."
+          class="form-control w-50 mx-auto mt-3"
+        ></textarea>
+
+        <!-- Submit rebuttal button -->
+        <button class="btn btn-danger mt-3" (click)="submitRebuttal()">
+          Submit Rebuttal
+        </button>
+
+        <!-- 💬 Previously submitted rebuttals against the same target (context for the user) -->
+        <div
+          *ngIf="(activeRebuttals?.length || 0) > 0"
+          class="mt-4 text-start w-50 mx-auto"
+        >
+          <h6 class="text-warning mb-2">💬 Existing rebuttals:</h6>
+          <ul class="list-group">
+            <li
+              *ngFor="let r of activeRebuttals"
+              class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center"
+            >
+              <span>{{ r.text }}</span>
+              <small class="text-muted" *ngIf="r.source"
+                >({{ r.source }})</small
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Challenge flow: select which justification to challenge -->
+      <div *ngIf="isChallengingJustification" class="text-center mt-4">
+        <h5 class="text-warning">{{ statusMessage }}</h5>
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-2">
+          <!-- Disable items already challenged; visually indicate via btn-secondary -->
+          <button
+            class="btn"
+            *ngFor="let justification of argumentPath.slice(1)"
+            [disabled]="challengedArgumentIds.has(justification.id)"
+            [ngClass]="{
+              'btn-outline-warning': !challengedArgumentIds.has(
+                justification.id
+              ),
+              'btn-secondary': challengedArgumentIds.has(justification.id)
+            }"
+            (click)="selectJustificationToChallenge(justification)"
+          >
+            {{ justification.text }}
+            <span *ngIf="challengedArgumentIds.has(justification.id)">
+              (Already challenged)
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Move replies block (kept commented for legacy/demo toggling) -->
+      <!--
+      <div class="text-center mt-4" *ngIf="replies.length > 0">
+        <h5>Available {{ selectedMove | titlecase }}s:</h5>
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-2">
+          <button
+            class="btn btn-outline-secondary"
+            *ngFor="let reply of replies"
+            (click)="selectReply(reply)"
+          >
+            {{ reply.text }}
+          </button>
+        </div>
+      </div>
+      -->
+
+      <!-- Add New Argument Form (commented out; preserved for future) -->
+      <!--
+      <div *ngIf="!showJustificationOptions" class="container mt-5">
+        <h5 class="text-center">➕ Add a New Argument</h5>
+        <form
+          class="mt-3"
+          (ngSubmit)="submitNewArgument()"
+          #argumentForm="ngForm"
+        >
+          <div class="mb-3">
+            <textarea
+              class="form-control"
+              placeholder="Enter your argument"
+              [(ngModel)]="newArgument.text"
+              name="text"
+              required
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <select
+                class="form-select"
+                [(ngModel)]="newArgument.moveType"
+                name="move_type"
+                required
+              >
+                <option value="" disabled selected>Select move type</option>
+                <option>Challenge</option>
+                <option>Rebuttal</option>
+                <option>Accept</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <input class="form-control" [value]="currentTurn" disabled />
+            </div>
+          </div>
+
+          <div class="text-center">
+            <button
+              class="btn btn-success"
+              type="submit"
+              [disabled]="!argumentForm.form.valid"
+            >
+              Submit Argument
+            </button>
+          </div>
+        </form>
+      </div>
+      -->
+
+      <!-- Move tracker (allowed moves + timer) -->
+      <div class="d-flex justify-content-center gap-4 mt-5 align-items-start">
+        <app-move-tracker-box
+          [allowedMoves]="[
+            { type: 'Challenge', count: moveLimits[currentTurn].challenge },
+            { type: 'Rebuttal', count: moveLimits[currentTurn].rebuttal }
+          ]"
+          [remainingTime]="remainingTime"
+          (timerExpired)="onTimerExpired()"
+        ></app-move-tracker-box>
+      </div>
+    </div>
+
+    <!-- 📒 Sidebar: Move History -->
+  </div>
+
+  <!-- Right sidebar with tabs: History / Info -->
+  <div class="move-history-sidebar sidebar-tabs">
+    <!-- Tab headers -->
+    <ul class="nav nav-tabs" id="sidebarTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="history-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#history"
+          type="button"
+          role="tab"
+          aria-controls="history"
+          aria-selected="false"
+        >
+          🕒 History
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          id="info-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#info"
+          type="button"
+          role="tab"
+          aria-controls="info"
+          aria-selected="true"
+        >
+          🧠 Info
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab contents -->
+    <div class="tab-content custom-tab-content" id="sidebarTabContent">
+      <!-- Move History tab pane -->
+      <div
+        class="tab-pane fade"
+        id="history"
+        role="tabpanel"
+        aria-labelledby="history-tab"
+      >
+        <app-move-history [moves]="moveHistoryList"></app-move-history>
+      </div>
+
+      <!-- Argument Info tab pane -->
+      <div
+        class="tab-pane fade show active"
+        id="info"
+        role="tabpanel"
+        aria-labelledby="info-tab"
+      >
+        <app-argument-info-box
+          [source]="'https://example.com/article-on-tv'"
+          [criticalQuestion]="'Does this argument rely on a generalization?'"
+        ></app-argument-info-box>
+      </div>
+    </div>
+  </div>
+</div>

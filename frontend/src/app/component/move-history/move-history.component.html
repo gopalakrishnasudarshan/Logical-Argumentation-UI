@@ -1,0 +1,34 @@
+<!--
+  Move History Template
+  ------------------------------------------------------------
+  Displays the chronological list of debate moves (e.g., challenge, rebut, accept)
+  made by the participants during an argumentation session.
+
+  Features:
+    • Shows a placeholder when there are no recorded moves.
+    • Lists each move with actor, move type, content, and optional timestamp.
+    • Uses a Bootstrap list group for clean visual separation.
+-->
+
+<!-- Displayed when there are no recorded moves -->
+<div *ngIf="moves.length === 0" class="text-muted text-center">
+  No moves yet.
+</div>
+
+<!-- Main move list -->
+<ul class="list-group">
+  <!-- Each move is rendered as a list item -->
+  <li *ngFor="let move of moves" class="move-entry">
+    <!-- Actor badge: identifies who made the move (Proponent/Opponent) -->
+    <span class="badge bg-secondary me-2">{{ move.actor }}</span>
+
+    <!-- Move type and content -->
+    <strong>{{ move.type }}</strong
+    >: {{ move.content }}
+
+    <!-- Optional timestamp shown if available -->
+    <div class="text-muted small" *ngIf="move.timestamp">
+      {{ move.timestamp | date : "shortTime" }}
+    </div>
+  </li>
+</ul>

@@ -1,0 +1,30 @@
+<!-- Top Header -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+  <a class="navbar-brand" href="#">Dialogical Debate</a>
+</nav>
+
+<!-- Main Layout: Sidebar + Page Content -->
+<div class="d-flex">
+  <!-- Sidebar -->
+  <div
+    class="sidebar-dark p-3"
+    style="
+      width: 220px;
+      height: calc(100vh - 56px);
+      position: sticky;
+      top: 56px;
+    "
+  >
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link active" routerLink="/">🏠 Home</a>
+      </li>
+      <!-- Future links can go here -->
+    </ul>
+  </div>
+
+  <!-- Routed Page Content -->
+  <main class="flex-grow-1 p-4">
+    <router-outlet></router-outlet>
+  </main>
+</div>

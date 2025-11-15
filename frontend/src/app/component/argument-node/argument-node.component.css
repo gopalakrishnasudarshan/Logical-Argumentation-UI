@@ -1,0 +1,11 @@
+.selected {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding-left: 10px;
+}
+
+.rebuttal-entry {
+  font-style: italic;
+  font-size: 0.95rem;
+}
+

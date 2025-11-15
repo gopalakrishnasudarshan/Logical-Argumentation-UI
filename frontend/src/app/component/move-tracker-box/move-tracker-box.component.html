@@ -1,0 +1,26 @@
+<!--
+  Move Tracker Box Template
+  ------------------------------------------------------------
+  Displays the currently allowed moves and a countdown timer
+  for the user's turn during the debate.
+
+  Features:
+    • Lists all allowed moves with their remaining counts.
+    • Shows a real-time countdown for the remaining response time.
+    • Uses simple Bootstrap utility classes for spacing and emphasis.
+-->
+
+<div class="tracker-box">
+  <!-- Section header -->
+  <h5 class="mb-3">⏱️Allowed Moves</h5>
+
+  <!-- Loop through each allowed move and display its type and remaining count -->
+  <div *ngFor="let move of allowedMoves" class="move-entry">
+    {{ move.type }} ({{ move.count }} times)
+  </div>
+
+  <!-- Display the remaining time for the user's turn -->
+  <div class="fw-bold text-danger">
+    ⌛ Remaining Time: {{ remainingTime }} seconds
+  </div>
+</div>

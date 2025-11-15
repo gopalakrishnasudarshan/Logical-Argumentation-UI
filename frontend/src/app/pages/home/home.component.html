@@ -1,0 +1,43 @@
+<!-- 🌐 Home Page: Topic Selection -->
+<h2 class="text-center mb-4">Choose a Topic</h2>
+
+<!-- Responsive grid of available debate topics -->
+<div class="row">
+  <!-- Individual topic card -->
+  <div class="col-md-4 col-lg-3 mb-4" *ngFor="let topic of topics">
+    <div
+      class="card shadow-sm h-100 border-0 topic-card"
+      (click)="goToTopic(topic.topic)"
+    >
+      <!-- Card content -->
+      <div class="card-body text-center bg-light rounded">
+        <!-- Topic title -->
+        <h5 class="card-title">{{ topic.topic }}</h5>
+
+        <!-- Short description / hint -->
+        <p class="card-text text-muted">Click to explore arguments</p>
+
+        <!-- Navigation buttons: choose between Classic or Two-Lane view -->
+        <div class="mt-2 d-flex gap-2 justify-content-center">
+          <!-- Classic View: Standard single-column argument interface -->
+          <a
+            class="btn btn-sm btn-outline-primary"
+            [routerLink]="['/topic', topic.topic]"
+            (click)="$event.stopPropagation()"
+          >
+            Classic
+          </a>
+
+          <!-- Two-Lane View: args.me-style dual-lane interface -->
+          <a
+            class="btn btn-sm btn-outline-info"
+            [routerLink]="['/argument-view/args', topic.topic]"
+            (click)="$event.stopPropagation()"
+          >
+            Two-Lane
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

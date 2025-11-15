@@ -1,0 +1,34 @@
+.move-entry {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Optional: different background or border for the latest move */
+.move-entry:last-child {
+  border-left: 4px solid #4da6ff;
+}
+
+/* Badges */
+.move-entry .badge {
+  background-color: #444;
+  color: #f0f0f0;
+  font-weight: 500;
+  min-width: 85px;
+  text-align: center;
+}
+
+/* Timestamp */
+.move-entry .text-muted {
+  color: #b0b0b0 !important;
+}
+
+/* No Moves Placeholder */
+.text-muted.text-center {
+  color: #aaa !important;
+  font-style: italic;
+}
