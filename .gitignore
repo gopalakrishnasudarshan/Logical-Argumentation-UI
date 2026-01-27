@@ -1,0 +1,27 @@
+# ========= BACKEND =========
+backend/target/
+backend/build/
+backend/.env
+backend/application-local.*
+backend/application-dev.*
+backend/application.properties
+
+# ========= FRONTEND =========
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+
+# ========= GENERAL SECRETS =========
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.jks
+
+# ========= IDE / OS =========
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

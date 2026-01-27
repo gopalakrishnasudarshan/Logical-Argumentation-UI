@@ -1,2 +1,12 @@
-frontend/* linguist-language=TypeScript
-backend/* linguist-language=Java
+# Normalize line endings
+* text=auto
+
+# Common binaries (do not alter)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.zip binary
+*.jar binary
+*.exe binary
