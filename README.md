@@ -25,31 +25,9 @@ It connects a Spring Boot backend (with MySQL database) and an Angular frontend,
 
 ---
 
-# 3. Project Structure
+# 3. Backend (Spring Boot)
 
-LOGARG/
-  backendapi/                       # Spring Boot Backend
-        src/main/java/com/argumentation/backendapi/
-                      controller/   # REST Controllers
-                      model/        # JPA Entities
-                      repository/   # Repositories
-                      service/      # Business Logic Services
-        pom.xml
-
-
-argument-ui/                        # Angular Frontend
-      src/app/
-            components/             # Angular Components
-            core/                   # Services
-            assets/mock/            # Mock JSON Files
-      angular.json
-
-
----
-
-# 4. Backend (Spring Boot)
-
-## 4.1 Tech Stack
+## 3.1 Tech Stack
 
 - Spring Boot 3+
 - Spring Data JPA
@@ -59,30 +37,7 @@ argument-ui/                        # Angular Frontend
 
 ---
 
-## 4.2 Key Packages
-
-|     Package                  |           Purpose                                
-|--------------------------------------------------------------------------|
-| controller                   | Contains REST endpoints for frontend calls 
-| model                        | Entity classes mapping to MySQL tables 
-| repository                   | Data access layer using JPA 
-| service                      | Business logic implementation layer 
-
----
-
-## 4.3 Database Structure (Main Tables)
-
-|     Table                    |           Description 
-|---------------------------------------------------------------------------------|
-| topics                       | Stores discussion topics 
-| statements                   | Stores claims, justifications, and rebuttals 
-| arguments                    | Links statements into logical argument structures 
-| premises                     | Connects justifications to their parent arguments 
-| sources                      | References or citations used in arguments 
-
----
-
-## 4.4 How to Run the Backend
+## 3.2 How to Run the Backend
 
 1. Open the project in IntelliJ or VS Code (Java)
 
@@ -99,7 +54,6 @@ spring.datasource.password=your_password
 
 mvn spring-boot:run
 
-
 5. Backend runs at
 
 http://localhost:8080
@@ -107,9 +61,9 @@ http://localhost:8080
 
 ---
 
-# 5. Frontend (Angular)
+# 4. Frontend (Angular)
 
-## 5.1 Tech Stack
+## 4.1 Tech Stack
 
 - Angular 17+
 - TypeScript
@@ -119,7 +73,7 @@ http://localhost:8080
 
 ---
 
-## 5.2 Key Components
+## 4.2 Key Components
 
 |         Component              |       Description 
 |--------------------------------|-----------------------------------------|
@@ -132,7 +86,7 @@ http://localhost:8080
 
 ---
 
-## 5.3 How to Run the Frontend
+## 4.3 How to Run the Frontend
 
 Navigate to frontend folder
 
@@ -148,13 +102,13 @@ http://localhost:4200
 
 ---
 
-# 6. Mock API Mode (Offline Demo)
+# 5. Mock API Mode (Offline Demo)
 
 The mock API allows the app to run without a backend.
 
 ---
 
-## 6.1 Mock Data Location
+## 5.1 Mock Data Location
 
 src/assets/mock/
 
@@ -168,7 +122,7 @@ Social Media.json
 
 ---
 
-## 6.2 Switch Between Mock and Backend
+## 5.2 Switch Between Mock and Backend
 
 In app.config.ts
 
@@ -179,17 +133,4 @@ In app.config.ts
 { provide: ArgumentService, useClass: ArgumentService }
 API Reference: See LOGARG Mock API Documentation.pdf
 
-7. Data Flow Summary
-With Backend
-Angular → Spring Boot Controller → Repository → MySQL → Response → Angular
-With Mock API
-Angular → MockArgumentService → /assets/mock JSON → Angular UI
 
-
-8.Example Backend Endpoints
-Endpoint	                Method	                Description
-/api/topics           	  GET	                    Fetch all topics
-/api/arguments/{topic}	  GET	                    Get arguments for topic
-/api/justifications/{id}	GET	                    Get justifications
-/api/rebuttals/{id}	      GET	                    Get rebuttals
-/api/rebuttals/create	    POST	                  Create rebuttal
